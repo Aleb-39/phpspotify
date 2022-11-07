@@ -17,8 +17,8 @@ class AuthSpotify
 
         if ($newTokenNeeded) {
 
-            $clientId = "XXXXX";
-            $clientSecret = "XXXX";
+            $clientId = "1486432b72a843dab4f01877afd4fb24";
+            $clientSecret = "13b38f6bf0794fcaa647c0040ad46029";
 
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, 'https://accounts.spotify.com/api/token');
@@ -36,7 +36,9 @@ class AuthSpotify
 
 
             $_SESSION['token'] = $result['access_token'];
-            $_SESSION['expire'] = time() + 3600;
+            $_SESSION['expire'] = time()+3600;
+
+
         }
     }
 }
