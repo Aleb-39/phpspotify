@@ -141,41 +141,111 @@ class ArtistController extends Controller
 
     public function favoris($id)
     {
-        //add to bdd
-        var_dump($id);
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, "https://api.spotify.com/v1/artists/" . $id);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Authorization: Bearer ' . $_SESSION['token']));
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        $result = curl_exec($ch);
-        $json = json_decode($result);
-        $artist = new Artist($json->id, $json->name, $json->followers->total, $json->genres, $json->external_urls->spotify, $json->images[0]->url);
+        $artist = new Artist(null, null, null, null, null, null);
+        $artist = $artist->findBy(array('idSpotify' => $id));
 
-        $artist->create();
+        if (empty($artist)) {
+            //add to bdd
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, "https://api.spotify.com/v1/artists/" . $id);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array('Authorization: Bearer ' . $_SESSION['token']));
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            $result = curl_exec($ch);
+            $json = json_decode($result);
+            $artist = new Artist($json->id, $json->name, $json->followers->total, $json->genres, $json->external_urls->spotify, $json->images[0]->url);
+
+            $artist->create();
+        }
+
+        //redirection vers index
+        header("Location: /artist/index");
+
+    }
+
+    public function artistfavoris()
+    {
+
+        $artist = new Artist(null, null, null, null, null, null);
+        $items = $artist->findAll();
+
+        $artists = array();
+
+        foreach ($items as $item) {
+            array_push($artists, new Artist($item->idSpotify, $item->name, $item->followers, json_decode($item->genders), $item->link, $item->picture));
+        }
+
+
+        //redirection vers index
+        $this->render('artist/artistfavoris', compact('artists'));
+    }
+
+    public function deleteartistfavoris($id)
+    {
+
+
+        $artist = new Artist(null, null, null, null, null, null);
+        $idBDD = $artist->findBy(array('idSpotify' => $id))[0]->id;
+
+        $items = $artist->delete($idBDD);
 
         //redirection vers index
 
-        header("Location: /artist/index");
+        header("Location: /artist/artistfavoris");
     }
 
     public function favorisalbum($id)
     {
-        //add to bdd
-        var_dump($id);
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, "https://api.spotify.com/v1/albums/" . $id);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Authorization: Bearer ' . $_SESSION['token']));
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        $result = curl_exec($ch);
-        $jsonAlbum = json_decode($result);
-        $album = new Album($jsonAlbum->id, $jsonAlbum->name, $jsonAlbum->release_date, $jsonAlbum->external_urls->spotify, $jsonAlbum->images[0]->url);
 
-        $album->create();
+        $album = new Album(null, null, null, null, null, null);
+        $album = $album->findBy(array('idSpotify' => $id));
 
+        if (empty($album)) {
+            //add to bdd
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, "https://api.spotify.com/v1/albums/" . $id);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array('Authorization: Bearer ' . $_SESSION['token']));
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            $result = curl_exec($ch);
+            $jsonAlbum = json_decode($result);
+            $album = new Album($jsonAlbum->id, $jsonAlbum->name, $jsonAlbum->release_date, $jsonAlbum->external_urls->spotify, $jsonAlbum->images[0]->url);
+
+            $album->create();
+        }
         //redirection vers index
 
         header("Location: /artist/index");
     }
 
+    public function albumfavoris()
+    {
+
+        $album = new Album(null, null, null, null, null);
+        $items = $album->findAll();
+
+        $albums = array();
+        foreach ($items as $item) {
+            $album = new Album($item->idSpotify, $item->name, $item->release_date, $item->tracks, $item->picture);
+            array_push($albums, $album);
+        }
+
+
+        //redirection vers index
+        $this->render('artist/albumfavoris', compact('albums'));
+    }
+
+
+    public function deletealbumfavoris($id)
+    {
+
+        $album = new Album(null, null, null, null, null);
+
+        $idBDD = $album->findBy(array('idSpotify' => $id))[0]->id;
+
+        $items = $album->delete($idBDD);
+
+        //redirection vers index
+
+        header("Location: /artist/artistfavoris");
+    }
 
 }
