@@ -8,4 +8,5 @@ class MainController extends Controller
     {
         $this->render('main/index', [], 'home');
     }
+
 }

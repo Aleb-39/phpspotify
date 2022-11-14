@@ -13,7 +13,7 @@ class Main
     public function start(): void
     {
 
-        // On démarre la session
+         // On démarre la session
         session_start();
         $authSpotify = new AuthSpotify();
         $authSpotify->auth();

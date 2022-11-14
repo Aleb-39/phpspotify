@@ -2,37 +2,39 @@
 
 namespace App\Entity;
 
-class Artist
+class Artist extends Model
 {
+    public  int|null $id;
 
     public function __construct(
-        public string $id,
+        public string|null $idSpotify,
 
-        public string $name,
+        public string|null $name,
 
-        public int    $followers,
+        public int|null    $followers,
 
-        public array  $genders,
+        public array|null  $genders,
 
-        public string $link,
+        public string|null $link,
 
-        public string $picture,
+        public string|null $picture,
     )
     {
+        $this->table = 'artist';
     }
 
-    public function getId(): string
+    public function getIdSpotify(): ?string
     {
-        return $this->id;
+        return $this->idSpotify;
     }
 
-    public function setId(string $id): self
+    public function setIdSpotify(string $id): self
     {
-        $this->id = $id;
+        $this->idSpotify = $id;
         return $this;
     }
 
-    public function getName(): string
+    public function getName(): ?string
     {
         return $this->name;
     }
@@ -49,23 +51,23 @@ class Artist
         return $this;
     }
 
-    public function getFollowers(): int
+    public function getFollowers(): ?int
     {
         return $this->followers;
     }
 
-    public function getGenders(): array
+    public function getGenders(): ?string
     {
         return $this->genders;
     }
 
-    public function setGenders(array $genders): self
+    public function setGenders(string $genders): self
     {
         $this->genders = $genders;
         return $this;
     }
 
-    public function getLink(): string
+    public function getLink(): ?string
     {
         return $this->link;
     }
@@ -77,7 +79,7 @@ class Artist
     }
 
 
-    public function getPicture(): string
+    public function getPicture(): ?string
     {
         return $this->picture;
     }
@@ -87,6 +89,18 @@ class Artist
         $this->picture = $picture;
         return $this;
     }
-
+    public function display(): string
+    {
+        $script =' <div class="card" style="width: 18rem;">
+    <img class="card-img-top" src="'.$this->getPicture().'" alt= "'.$this->getName().'">
+    <div class="card-body">
+        <h5 class="card-title">'.$this->getName().'</h5>
+<p class="card-text">nb de followers :'.$this->getFollowers().'</p>
+<a href="#" class="btn btn-primary">Go somewhere</a>
+</div>
+</div>';
+        return $script;
+    }
 
 }
+

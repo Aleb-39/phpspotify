@@ -15,7 +15,11 @@ use App\Entity\Artist;
     <title>spotify</title>
 </head>
 <body>
-<h1> Page Artist </h1>
+<h1> Page Track </h1>
+<?php
+$album = $result['album'];
+$tracks = $result['tracks']
+?>
 <div class="card mb-3" style="width: 18rem;">
     <?php if($album->getPicture() != null) :?>
         <img class="card-img-top" src='<?=$album->getPicture()?>' alt= '<?=$album->getName()?>'>
@@ -26,27 +30,18 @@ use App\Entity\Artist;
         <h5 class="card-title"><?=$album->getName()?></h5>
         <p class="card-text">realease date :<?=$album->getReleaseDate()?></p>
 
-        <a href="/artist/profil/?id=<?= $album->getId() ?>" class="btn btn-primary">Go somewhere</a>
+        <a href="/artist/profil/?id=<?= $album->getIdSpotify() ?>" class="btn btn-primary">Go somewhere</a>
     </div>
 </div>
-<div class = "row">
-    <?php foreach ($albums as $album):?>
-        <div class="col-md-4">
-            <div class="card mb-3" style="width: 18rem;">
-                <?php if($album->getPicture() != null) :?>
-                    <img class="card-img-top" src='<?=$album->getPicture()?>' alt= '<?=$album->getName()?>'>
-                <?php  else :?>
-                    <img class="card-img-top" src='https://i.scdn.co/image/ab6761610000e5ebdc9a67f0c952133be316f4e6' alt= '<?=$album->getName()?>'>
-                <?php endif;?>
-                <div class="card-body">
-                    <h5 class="card-title"><?=$album->getName()?></h5>
-                    <p class="card-text">realease date :<?=$album->getReleaseDate()?></p>
+    <?php foreach ($tracks as $track):?>
 
-                    <a href="/artist/profil/?id=<?= $album->getId() ?>" class="btn btn-primary">Go somewhere</a>
-                </div>
-            </div>
-        </div>
+                    <ul>
+                    <li><?=$track->getTrackNumber()?> : <?=$track->getName()?>
+                    <a href="#" class="btn btn-primary">Play</a>
+                        <a href="#" class="btn btn-primary">Ajout au favoris</a></>
+                    </ul>
     <?php endforeach; ?>
-</div>
 </body>
 </html>
+
+
